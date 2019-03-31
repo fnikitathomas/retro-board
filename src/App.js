@@ -38,8 +38,7 @@ class App extends Component {
     let eid = parseInt(e.target.id)
     let updatedList = this.state.list.map(obj => {
       if (obj.id === col) {
-        let card = { text: e.target.value }
-        obj.cards[eid] = card
+        obj.cards[eid].text = e.target.value
       }
       return obj
     })
@@ -52,7 +51,9 @@ class App extends Component {
     let updatedList = this.state.list.map(obj => {
       if (obj.id === col) {
         a0 = obj.cards.splice(eid, 1)[0]
+        obj.cards.map((o,i) => o.id = i)
         this.state.list[(1.5 * (col ** 2) - 3.5 * col + 2)].cards.push(a0)
+        this.state.list[(1.5 * (col ** 2) - 3.5 * col + 2)].cards.map((o,i) => o.id = i)
       }
       return obj
     })
@@ -65,7 +66,9 @@ class App extends Component {
     let updatedList = this.state.list.map(obj => {
       if (obj.id === col) {
         a0 = obj.cards.splice(eid, 1)[0]
+        obj.cards.map((o,i) => o.id = i)
         this.state.list[(-1.5 * (col ** 2) + 2.5 * col + 1)].cards.push(a0)
+        this.state.list[(-1.5 * (col ** 2) + 2.5 * col + 1)].cards.map((o,i) => o.id = i)
       }
       return obj
     })
@@ -91,11 +94,11 @@ class App extends Component {
     let updatedList = this.state.list.map(obj => {
       if (obj.id === col) {
         obj.cards = obj.cards.filter(c => c.id !== eid)
+        obj.cards.map((o,i) => o.id = i)
         obj.counter--
       }
       return obj
     })
-    console.log("in delete - updatedList",updatedList)
     this.setState({ list: updatedList })
   }
 
@@ -112,7 +115,6 @@ class App extends Component {
     })
     console.log("uL - add", updatedList)
     this.setState({ list: updatedList })
-    //this.setState(this.state.list[e.target.id].cards = [...this.state.list[e.target.id].cards,"pp"])
   }
 
   /**
@@ -120,38 +122,33 @@ class App extends Component {
    */
 
   onDragEnd = result => {
-    console.log("in onDragEnd - result",result)
     const {destination, source, draggableId} = result
     if(!destination) return
-    // if(
-    //   destination.droppableId === source.droppableId &&
-    //   destination.index === source.index
-    // ){console.log("they're equal");return}
-    let start = this.state.list[source.droppableId]
-    let finish = this.state.list[destination.droppableId]
-    console.log("s == f", start === finish)
-    console.log("start",start,"finish",finish)
-    console.log("s.i",source.index,"d.i",destination.index)
-    console.log(typeof source.droppableId === 'string',"d.d",destination.droppableId)
-    console.log("dragId",draggableId)
+    let start = this.state.list[parseInt(source.droppableId)]
+    let finish = this.state.list[parseInt(destination.droppableId)]
     if(start === finish){
       let updatedList = this.state.list.map(obj => {
         if(obj.id === parseInt(source.droppableId)){
-          console.log("in if 2")
           let a0 = obj.cards.splice(source.index,1)
           obj.cards.splice(destination.index,0,a0[0])
+          obj.cards.map((o,i) => o.id = i)
         }
         return obj
       })
-      console.log("updatedList",updatedList)
       this.setState({list:updatedList})
     }
-
-    // const col = this.state.list[source.droppableId]
-    // const arr = col.cards
-    // arr.splice(source.index,1)
-    // arr.splice(destination.index,0,draggableId)
-
+   if(start !== finish) {
+     let updatedList = this.state.list.map(obj => {
+      if(obj.id === parseInt(source.droppableId)){
+        let a0 = obj.cards.splice(source.index,1)
+        obj.cards.map((o,i) => o.id = i)
+        this.state.list[parseInt(destination.droppableId)].cards.splice(destination.index,0,a0[0])
+        this.state.list[parseInt(destination.droppableId)].cards.map((o,i) => o.id = i)
+      }
+      return obj
+    })
+    this.setState({list:updatedList})
+   }
   }
 
   render() {

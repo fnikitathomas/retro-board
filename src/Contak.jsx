@@ -24,6 +24,7 @@ const Contak = (props) =>{
                 <Container
                     ref={provided.innerRef}
                     {...provided.droppableProps}
+                    style={{minHeight:500}}
                 >
                             {props.cards.map((card,i)=> {
                                 console.log("card",card)

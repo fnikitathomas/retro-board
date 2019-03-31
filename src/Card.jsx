@@ -5,8 +5,7 @@ import styled from 'styled-components'
 const Container = styled.div``
 
 const Card = (props) =>{
-    console.log("card props and value",props)
-    return <Draggable draggableId={props.idx+""} index={props.idx}>
+    return <Draggable draggableId={props.col+"-"+props.idx} index={props.idx}>
             {(provided) => (
             <Container
                 {...provided.draggableProps}
