@@ -34,9 +34,11 @@ const Contak = (props) =>{
                                             card={card}
                                             color={props.color}
                                             left={props.left}
+                                            like={props.like}
+                                            hate={props.hate}
                                             right={props.right}
                                             delete={props.delete}
-                                            // setText={props.setText}
+                                            setText={props.setText}
                                             handleChange={props.handleChange}
                                         />
                                 })}

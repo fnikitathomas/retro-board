@@ -45,6 +45,30 @@ class App extends Component {
     this.setState({ list: updatedList })
   }
 
+  like = (e, col) => {
+    e.preventDefault()
+    let eid = parseInt(e.target.id)
+    let updatedList = this.state.list.map(obj => {
+      if(obj.id === col){
+        obj.cards[eid].like++
+      }
+      return obj
+    })
+    this.setState({ list: updatedList })
+  }
+
+  hate = (e, col) => {
+    e.preventDefault()
+    let eid = parseInt(e.target.id)
+    let updatedList = this.state.list.map(obj => {
+      if(obj.id === col){
+        obj.cards[eid].hate++
+      }
+      return obj
+    })
+    this.setState({ list: updatedList })
+  }
+
   left = (e, col) => {
     e.preventDefault()
     let eid = parseInt(e.target.id), a0
@@ -52,8 +76,10 @@ class App extends Component {
       if (obj.id === col) {
         a0 = obj.cards.splice(eid, 1)[0]
         obj.cards.map((o,i) => o.id = i)
+        obj.counter--
         this.state.list[(1.5 * (col ** 2) - 3.5 * col + 2)].cards.push(a0)
         this.state.list[(1.5 * (col ** 2) - 3.5 * col + 2)].cards.map((o,i) => o.id = i)
+        this.state.list[(1.5 * (col ** 2) - 3.5 * col + 2)].counter++
       }
       return obj
     })
@@ -67,26 +93,28 @@ class App extends Component {
       if (obj.id === col) {
         a0 = obj.cards.splice(eid, 1)[0]
         obj.cards.map((o,i) => o.id = i)
+        obj.counter--
         this.state.list[(-1.5 * (col ** 2) + 2.5 * col + 1)].cards.push(a0)
         this.state.list[(-1.5 * (col ** 2) + 2.5 * col + 1)].cards.map((o,i) => o.id = i)
+        this.state.list[(-1.5 * (col ** 2) + 2.5 * col + 1)].counter++
       }
       return obj
     })
     this.setState({ list: updatedList })
   }
 
-  // setText = (e, col) => {
-  //   console.log("in setText value =", e.target.value === "")
-  //   if (e.target.value === "") {
-  //     e.target.placeholder = "YOU MUST ENTER TEXT. THIS BOX WILL CLOSE NOW"
-  //     e.persist()
-  //     console.log("in setText - eid", e.target.id)
-  //     setTimeout(() => {
-  //       this.delete(e, col)
-  //     }, 3000)
-  //     return
-  //   }
-  // }
+  setText = (e, col) => {
+    console.log("in setText value =", e.target.value === "")
+    if (e.target.value === "") {
+      e.target.placeholder = "YOU MUST ENTER TEXT. THIS BOX WILL CLOSE NOW"
+      e.persist()
+      console.log("in setText - eid", e.target.id)
+      setTimeout(() => {
+        this.delete(e, col)
+      }, 3000)
+      return
+    }
+  }
 
   delete = (e, col) => {
     e.preventDefault()
@@ -107,13 +135,12 @@ class App extends Component {
     let eid = parseInt(e.target.id)
     let updatedList = this.state.list.map(obj => {
       if (obj.id === eid) {
-        let card = {id:obj.counter,text:""}
+        let card = { id: obj.counter, like: 0, hate: 0, text:"" }
         obj.cards.push(card)
         obj.counter++
       }
       return obj
     })
-    console.log("uL - add", updatedList)
     this.setState({ list: updatedList })
   }
 
@@ -122,7 +149,7 @@ class App extends Component {
    */
 
   onDragEnd = result => {
-    const {destination, source, draggableId} = result
+    const {destination, source} = result
     if(!destination) return
     let start = this.state.list[parseInt(source.droppableId)]
     let finish = this.state.list[parseInt(destination.droppableId)]
@@ -166,8 +193,10 @@ class App extends Component {
                 add={this.add}
                 left={this.left}
                 right={this.right}
+                like={this.like}
+                hate={this.hate}
                 delete={this.delete}
-                //setText={this.setText}
+                setText={this.setText}
                 handleChange={this.handleChange} />
             )}
           </ul>
